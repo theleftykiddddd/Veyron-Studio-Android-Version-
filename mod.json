@@ -1,0 +1,46 @@
+{
+    "geode": "6.0.0-alpha.1",
+    "gd": {
+        "android": "2.2091"
+    },
+    "version": "v1.2.0",
+    "id": "alan.veyron-studio",
+    "name": "Veyron Studio",
+    "developer": "Alan",
+    "description": "Android64 creator toolkit for Geometry Dash: diagnostics, frame-window analysis, ID usage, snapshots, structure maps, runtime profiling and macro data tools.",
+    "dependencies": [],
+    "tags": [
+        "editor",
+        "utility",
+        "developer",
+        "interface"
+    ],
+    "settings": {
+        "animate-ui": {
+            "name": "Interface animations",
+            "description": "Enable the dashboard entrance animation.",
+            "type": "bool",
+            "default": true
+        },
+        "diagnostic-sensitivity": {
+            "name": "Diagnostic sensitivity",
+            "description": "Controls how strict coordinate warnings are.",
+            "type": "int",
+            "default": 2,
+            "min": 1,
+            "max": 5
+        },
+        "project-name": {
+            "name": "Default project name",
+            "description": "Used until a saved project name is created.",
+            "type": "string",
+            "default": "Untitled Project"
+        },
+        "project-notes": {
+            "name": "Default project notes",
+            "description": "Used until saved project notes are created.",
+            "type": "string",
+            "default": ""
+        }
+    }
+}

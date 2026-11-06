@@ -1,0 +1,10 @@
+# Veyron macro exchange format.
+VEYRON_MACRO_V1
+name=Sample Frame Window Macro
+framerate=240
+event=10,1,1
+event=11,1,0
+event=19,1,1
+event=32,1,0
+event=34,1,1
+event=35,1,0

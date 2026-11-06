@@ -1,0 +1,82 @@
+name: Veyron Studio - Android64 Build
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: veyron-studio-android64-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build Android64 (ARM64)
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate and normalize mod.json
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path("mod.json")
+          if not path.is_file():
+              raise SystemExit("ERROR: mod.json was not found in the repository root")
+
+          data = json.loads(path.read_text(encoding="utf-8"))
+          geode = str(data.get("geode", "")).strip()
+          if geode[:1].lower() == "v":
+              geode = geode[1:]
+          if geode != "6.0.0-alpha.1":
+              raise SystemExit(f"ERROR: Expected Geode 6.0.0-alpha.1, got {geode!r}")
+
+          data["geode"] = geode
+          data["gd"] = {"android": "2.2091"}
+          path.write_text(json.dumps(data, ensure_ascii=False, indent=4) + "\n", encoding="utf-8")
+          print("Validated Geode 6.0.0-alpha.1 and Geometry Dash Android 2.2091")
+          PY
+
+      - name: Run core regression tests
+        shell: bash
+        run: |
+          cmake -S . -B build-core -DVEYRON_BUILD_CORE_TESTS=ON -DCMAKE_BUILD_TYPE=Release
+          cmake --build build-core --parallel 2
+          ctest --test-dir build-core --output-on-failure
+
+      - name: Build Veyron Studio for Android64
+        id: build
+        uses: geode-sdk/build-geode-mod@main
+        with:
+          sdk: given
+          cli: latest
+          target: Android64
+          android-min-sdk: 23
+          build-config: Release
+          use-lto: "false"
+
+      - name: Verify generated package
+        shell: bash
+        run: |
+          find "${{ steps.build.outputs.build-output }}" -type f -name '*.geode' -print -quit | grep -q . || {
+            echo "ERROR: Geode package was not generated."
+            exit 1
+          }
+
+      - name: Upload Android64 package
+        uses: actions/upload-artifact@v4
+        with:
+          name: Veyron-Studio-Android64-GD-2.2091
+          path: ${{ steps.build.outputs.build-output }}
+          if-no-files-found: error
+          retention-days: 14

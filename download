@@ -1,0 +1,9 @@
+build/
+build-*/
+cmake-build-*/
+.cache/
+*.geode
+*.o
+*.a
+*.so
+.DS_Store

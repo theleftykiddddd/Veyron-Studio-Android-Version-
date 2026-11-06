@@ -1,0 +1,9 @@
+# Veyron's portable test/import format. This is not GD's encoded level string.
+VEYRON_LEVEL_V1
+name=Sample Creator Level
+object=1,1,1,0,0,0
+object=901,4,2,120,0,1
+object=1815,4,2,240,48,0
+object=2067,4,3,360,48,1
+object=211,5,4,500,48,0
+object=1764,7,5,1000,96,0
